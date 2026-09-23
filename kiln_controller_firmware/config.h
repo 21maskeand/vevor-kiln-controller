@@ -26,4 +26,23 @@ constexpr int UP_ID = 2;
 constexpr int DOWN_ID = 3;
 constexpr int SHORT_PRESS = 100;
 constexpr int LONG_PRESS = 3000;
+constexpr int VERY_LONG_PRESS = 50000;
 constexpr int WAIT_TIME = 1000;
+
+/**
+ * @name SD Card Configs
+ * @brief These are the SD Card configs.
+ */
+/// The SD chip select pin.
+constexpr int SD_CS_PIN = 10;
+/// The SD card chip detected pin, detects when an sd card is inserted.
+constexpr int SD_CD_PIN = 2;
+/// The value to set the serial clock speed to.
+constexpr int SD_SCK_MHZ_VALUE = 4;
+
+/**
+ * @name Schedule Configs
+ * @brief Contains all configs related to the schedule. 
+ */
+constexpr str SCHEDULE_NAME = "schedule.json";
+constexpr int MAX_TEMP = 1200;
