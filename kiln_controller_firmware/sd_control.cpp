@@ -43,7 +43,7 @@ bool load_Doc(const char* path , JsonDocument& doc)
   f.close();
   if (er)
   {
-    Serial.println("Deserialization Error.")
+    Serial.println("Deserialization Error.");
     return false;
   }
   else
@@ -83,8 +83,8 @@ int load_Schedule(JsonDocument& doc , int* temps , float* ramps , int* hold_time
   int n_ramps = read_Float_Array(doc["ramps"].as<JsonArrayConst>() , ramps , max_count);
   int n_hold_times = read_Int_Array(doc["hold_times"].as<JsonArrayConst>() , hold_times , max_count);
 
-  if (n_temps == -1 || n_ramps == -1 || n_hold_times == -1) {Serial.println("One of the schedule arrays did not load."); return -1};
-  if ((n_temps != n_ramps) || (n_ramps != n_hold_times)) {Serial.println("The schedule array lengths do not match."); return -1};
+  if (n_temps == -1 || n_ramps == -1 || n_hold_times == -1) {Serial.println("One of the schedule arrays did not load."); return -1;}
+  if ((n_temps != n_ramps) || (n_ramps != n_hold_times)) {Serial.println("The schedule array lengths do not match."); return -1;}
   return n_temps;
 
 }

@@ -139,7 +139,6 @@ void do_Stage(int temp , float ramp , int hold_time)
       return;
     }
   }
-  delay(min_To_Millis(hold_time));
 
   current_temp = temp;
 
@@ -192,7 +191,7 @@ Controller_Status controller_Go()
 
 void wait_Till_Card_Gone()
 {
-  Serial.println("Remove SD Card.")
+  Serial.println("Remove SD Card.");
   while (true)
   {
     if (!is_Card_Still_In()) 
