@@ -31,7 +31,7 @@ void led_Init()
   pinMode(IN_PROGRESS_LED_PIN , OUTPUT);
 }
 
-void led_Update()
+void indicator_Update()
 {
   if (controller_status == READY)
   {
@@ -193,26 +193,23 @@ Controller_Status controller_Go()
 void wait_Till_Card_Gone()
 {
   Serial.println(F("Remove SD Card."));
-  while (true)
-  {
-    card_status = is_Card_And_Mount_If();
-    if (card_status == OUT) break;
-  }
+  while (is_Card_Still_In() != OUT) {}
+  card_status = OUT;
 }
 
 void loop() 
 {
-  led_Update();
+  indicator_Update();
 
   card_status = is_Card_And_Mount_If();
   if (card_status == GOOD)
   {
     
     controller_status = IN_PROGRESS;
-    led_Update();
+    indicator_Update();
 
     controller_status = controller_Start();
-    led_Update();
+    indicator_Update();
     if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
@@ -222,18 +219,25 @@ void loop()
     wait_Till_Card_Gone();
 
     controller_status = IN_PROGRESS;
-    led_Update();
+    indicator_Update();
     go_To_Zero();
 
     controller_status = controller_Go();
-    led_Update();
+    indicator_Update();
     if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
       return;
     }
   }
-  else if (card_status == MOUNT_ERROR) wait_Till_Card_Gone();
+  else if (card_status == MOUNT_ERROR) 
+  {
+    controller_status = ERROR;
+    indicator_Update();
+    wait_Till_Card_Gone();
+    controller_status = READY;
+    indicator_Update();
+  }
 }
 
 

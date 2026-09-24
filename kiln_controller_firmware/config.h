@@ -57,7 +57,7 @@ constexpr unsigned long MAX_RAMP_PRESSES_CHECK = 10000;
  * @name Status Configs
  * @brief These are the configs for status LEDs
  */
-constexpr int READY_LED_PIN = 13;
+constexpr int READY_LED_PIN = 3;
 constexpr int ERROR_LED_PIN = 4;
 constexpr int IN_PROGRESS_LED_PIN = 5;
 
