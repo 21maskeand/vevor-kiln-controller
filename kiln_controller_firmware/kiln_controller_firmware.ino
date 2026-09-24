@@ -17,6 +17,7 @@ JsonDocument doc;
 
 void setup() 
 {
+  Serial.begin(115200);
   sd_Control_Init();
   buttons_Init();
   led_Init();
@@ -130,7 +131,7 @@ void do_Stage(int temp , float ramp , int hold_time)
   if (sd_card_in) return;
   current_temp = temp;
   unsigned long start_time = millis();
-  while (millis() - start_time > min_To_Millis(hold_time))
+  while (millis() - start_time < min_To_Millis(hold_time))
   {
     if (is_Card_And_Mount_If())
     {
@@ -152,14 +153,14 @@ Controller_Status controller_Start()
     if (n_stages == -1) return ERROR;
     else
     {
-      float max_ramp = max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK)
+      float max_ramp = max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK);
       for (int i = 0; i < n_stages; i++)
       {
-        if (temps[i] > MAX_TEMP) {Serial.print("Temp "); Serial.print(i); Serial.print(" of ") Serial.print(temps[i]); Serial.println(" exceeds the maximum set."); return ERROR;}
-        if (temps[i] < 0) {Serial.print("Temp "); Serial.print(i); Serial.print(" of ") Serial.print(temps[i]); Serial.println(" cannot be less than zero."); return ERROR;}
-        if (ramps[i] <= 0) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of ") Serial.print(ramps[i]); Serial.println(" cannot be less than or equal to zero."); return ERROR;}
-        if (ramps[i] > max_ramp) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of ") Serial.print(ramps[i]); Serial.print(" exceeds the maximum ramp speed for this configuration of "); Serial.println(max_ramp); return ERROR;}
-        if (hold_times[i] < 0) {Serial.print("Hold time "); Serial.print(i); Serial.print(" of ") Serial.print(hold_times[i]); Serial.println(" Cannot be less than zero."); return ERROR;}
+        if (temps[i] > MAX_TEMP) {Serial.print("Temp "); Serial.print(i); Serial.print(" of "); Serial.print(temps[i]); Serial.println(" exceeds the maximum set."); return ERROR;}
+        if (temps[i] < 0) {Serial.print("Temp "); Serial.print(i); Serial.print(" of "); Serial.print(temps[i]); Serial.println(" cannot be less than zero."); return ERROR;}
+        if (ramps[i] <= 0) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of "); Serial.print(ramps[i]); Serial.println(" cannot be less than or equal to zero."); return ERROR;}
+        if (ramps[i] > max_ramp) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of "); Serial.print(ramps[i]); Serial.print(" exceeds the maximum ramp speed for this configuration of "); Serial.println(max_ramp); return ERROR;}
+        if (hold_times[i] < 0) {Serial.print("Hold time "); Serial.print(i); Serial.print(" of "); Serial.print(hold_times[i]); Serial.println(" Cannot be less than zero."); return ERROR;}
         
       }
       return READY;
@@ -177,7 +178,7 @@ Controller_Status controller_Go()
   }
   if (sd_card_in)
   {
-    Serial.println("SD card cannot be inserted while the schedule is running.")
+    Serial.println("SD card cannot be inserted while the schedule is running.");
     go_To_Zero();
     return ERROR;
   }
