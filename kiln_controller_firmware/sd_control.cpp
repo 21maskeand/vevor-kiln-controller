@@ -27,7 +27,7 @@ bool is_Card_And_Mount_If()
       bool is_good = sd.begin(SD_CS_PIN , SD_SCK_MHZ(SD_SCK_MHZ_VALUE));
       if (!is_good)
       {
-        Serial.println("SD Card was detected but failed to mount.");
+        Serial.println(F("SD Card was detected but failed to mount."));
       }
       return is_good;
     }
@@ -37,13 +37,13 @@ bool is_Card_And_Mount_If()
 
 bool load_Doc(const char* path , JsonDocument& doc)
 {
-  File f = sd.open(path , O_RDONLY);
-  if (!f) {Serial.print("No file with path: "); Serial.print(path); Serial.println(" detected."); return false;}
+  auto f = sd.open(path , O_RDONLY);
+  if (!f) {Serial.print(F("No file with path: ")); Serial.print(path); Serial.println(F(" detected.")); return false;}
   DeserializationError er = deserializeJson(doc , f);
   f.close();
   if (er)
   {
-    Serial.println("Deserialization Error.");
+    Serial.println(F("Deserialization Error."));
     return false;
   }
   else
@@ -83,8 +83,8 @@ int load_Schedule(JsonDocument& doc , int* temps , float* ramps , int* hold_time
   int n_ramps = read_Float_Array(doc["ramps"].as<JsonArrayConst>() , ramps , max_count);
   int n_hold_times = read_Int_Array(doc["hold_times"].as<JsonArrayConst>() , hold_times , max_count);
 
-  if (n_temps == -1 || n_ramps == -1 || n_hold_times == -1) {Serial.println("One of the schedule arrays did not load."); return -1;}
-  if ((n_temps != n_ramps) || (n_ramps != n_hold_times)) {Serial.println("The schedule array lengths do not match."); return -1;}
+  if (n_temps == -1 || n_ramps == -1 || n_hold_times == -1) {Serial.println(F("One of the schedule arrays did not load.")); return -1;}
+  if ((n_temps != n_ramps) || (n_ramps != n_hold_times)) {Serial.println(F("The schedule array lengths do not match.")); return -1;}
   return n_temps;
 
 }

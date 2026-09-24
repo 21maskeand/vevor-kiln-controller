@@ -155,11 +155,11 @@ Controller_Status controller_Start()
       float max_ramp = max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK);
       for (int i = 0; i < n_stages; i++)
       {
-        if (temps[i] > MAX_TEMP) {Serial.print("Temp "); Serial.print(i); Serial.print(" of "); Serial.print(temps[i]); Serial.println(" exceeds the maximum set."); return ERROR;}
-        if (temps[i] < 0) {Serial.print("Temp "); Serial.print(i); Serial.print(" of "); Serial.print(temps[i]); Serial.println(" cannot be less than zero."); return ERROR;}
-        if (ramps[i] <= 0) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of "); Serial.print(ramps[i]); Serial.println(" cannot be less than or equal to zero."); return ERROR;}
-        if (ramps[i] > max_ramp) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of "); Serial.print(ramps[i]); Serial.print(" exceeds the maximum ramp speed for this configuration of "); Serial.println(max_ramp); return ERROR;}
-        if (hold_times[i] < 0) {Serial.print("Hold time "); Serial.print(i); Serial.print(" of "); Serial.print(hold_times[i]); Serial.println(" Cannot be less than zero."); return ERROR;}
+        if (temps[i] > MAX_TEMP) {Serial.print(F("Temp ")); Serial.print(i); Serial.print(F(" of ")); Serial.print(temps[i]); Serial.println(F(" exceeds the maximum set.")); return ERROR;}
+        if (temps[i] < 0) {Serial.print(F("Temp ")); Serial.print(i); Serial.print(F(" of ")); Serial.print(temps[i]); Serial.println(F(" cannot be less than zero.")); return ERROR;}
+        if (ramps[i] <= 0) {Serial.print(F("Ramp ")); Serial.print(i); Serial.print(F(" of ")); Serial.print(ramps[i]); Serial.println(F(" cannot be less than or equal to zero.")); return ERROR;}
+        if (ramps[i] > max_ramp) {Serial.print(F("Ramp ")); Serial.print(i); Serial.print(F(" of ")); Serial.print(ramps[i]); Serial.print(F(" exceeds the maximum ramp speed for this configuration of ")); Serial.println(max_ramp); return ERROR;}
+        if (hold_times[i] < 0) {Serial.print(F("Hold time ")); Serial.print(i); Serial.print(F(" of ")); Serial.print(hold_times[i]); Serial.println(F(" Cannot be less than zero.")); return ERROR;}
         
       }
       return READY;
@@ -177,7 +177,7 @@ Controller_Status controller_Go()
   }
   if (sd_card_in)
   {
-    Serial.println("SD card cannot be inserted while the schedule is running.");
+    Serial.println(F("SD card cannot be inserted while the schedule is running."));
     go_To_Zero();
     return ERROR;
   }
@@ -191,7 +191,7 @@ Controller_Status controller_Go()
 
 void wait_Till_Card_Gone()
 {
-  Serial.println("Remove SD Card.");
+  Serial.println(F("Remove SD Card."));
   while (true)
   {
     if (!is_Card_Still_In()) 
