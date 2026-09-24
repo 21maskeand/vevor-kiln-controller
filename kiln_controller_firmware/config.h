@@ -4,13 +4,14 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 /**
  * @name Servo Configs
  * @brief These are the servo config variables.
  */
 constexpr int SERVO_DRIVER_ADDR = 0x40;
-constexpr unit32_t OSC_FREQ = 25000000;
+constexpr uint32_t OSC_FREQ = 25000000;
 constexpr int PWM_FREQ = 50;
 constexpr int SERVO_CHANNELS[4] = {0 , 1 , 2 , 3};
 constexpr float SERVO_UNPRESS_ANGLE[4] = {0 , 0 , 0 , 0};
@@ -27,7 +28,7 @@ constexpr int DOWN_ID = 3;
 constexpr unsigned long SHORT_PRESS = 100;
 constexpr unsigned long LONG_PRESS = 3000;
 constexpr unsigned long VERY_LONG_PRESS = 50000;
-constexpr unsigned long WAIT_TIME = 1000;
+constexpr unsigned long WAIT_TIME = 500;
 
 /**
  * @name SD Card Configs
@@ -47,6 +48,7 @@ constexpr int SD_SCK_MHZ_VALUE = 4;
 constexpr char SCHEDULE_PATH[] = "schedule.json";
 constexpr int MAX_TEMP = 1200;
 constexpr int MAX_STAGES = 15;
+constexpr unsigned long MAX_RAMP_PRESSES_CHECK = 10000;
 
 /**
  * @name Status Configs

@@ -59,26 +59,26 @@ float get_Time()
   return millis() / 60000.0;
 }
 
-int min_To_Millis(int time)
+unsigned long min_To_Millis(int time)
 {
   return time * 60000;
 }
 
 float max_Ramp_For_Num_Presses(int num_presses)
 {
-  float minutes = (LONG_PRESS + WAIT + (SHORT_PRESS * num_presses) + LONG_PRESS + WAIT) / 60000.0;
+  float minutes = (LONG_PRESS + WAIT_TIME + ((SHORT_PRESS + WAIT_TIME) * num_presses) + LONG_PRESS + WAIT_TIME) / 60000.0;
   return num_presses / minutes;
 }
 
-void do_Ramp_Section(float ramp , int num_presses , int increments)
+void do_Ramp_Section(float ramp , int num_presses , int increments , bool direction)
 {
   float change_time = get_Time();
   for (int i = 0; i < increments; i ++)
   {
-    float minutes_per_degree = 1 / ramp;
+    float interval = num_presses / ramp;
     while (true)
     {
-      if ((get_Time() - change_time) > minutes_per_degree)
+      if ((get_Time() - change_time) > interval)
       {
         change_time = get_Time();
         press_Button(U_ID , LONG_PRESS);
@@ -95,20 +95,20 @@ void do_Ramp_Section(float ramp , int num_presses , int increments)
   }
 }
 
-void do_Ramp(int temp , float ramp);
+void do_Ramp(int temp , float ramp)
 {
   int temp_diff = temp - current_temp;
   bool direction = temp_diff > 0;
 
-  num_presses = 1;
+  int num_presses = 1;
   while (true)
   {
     if (max_Ramp_For_Num_Presses(num_presses) > ramp) break;
     else num_presses++;
   }
 
-  do_Ramp_Section(ramp , num_presses , abs(temp_diff) / num_presses);
-  do_Ramp_Section(ramp , 1 , abs(temp_diff) % num_presses)
+  do_Ramp_Section(ramp , num_presses , abs(temp_diff) / num_presses , direction);
+  do_Ramp_Section(ramp , abs(temp_diff) % num_presses , direction , 1);
 
 }
 
@@ -140,6 +140,7 @@ Controller_Status controller_go()
         if (temps[i] > MAX_TEMP) return ERROR;
         if (temps[i] < 0) return ERROR;
         if (ramps[i] == 0) return ERROR;
+        if (ramps[i] > max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK)) return ERROR;
         if (hold_times[i] < 0) return ERROR;
         
       }

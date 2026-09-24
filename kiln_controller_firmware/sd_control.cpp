@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
-SDFat sd;
+SdFat sd;
 
 void sd_Control_Init()
 {
@@ -55,7 +55,7 @@ int read_Int_Array(JsonArrayConst arr , int* out , int max_count)
   return n;
 }
 
-float read_Float_Array(JsonArrayConst arr , float* out , int max_count)
+int read_Float_Array(JsonArrayConst arr , float* out , int max_count)
 {
   if (arr.isNull()) return -1;
   int n = 0;

@@ -40,7 +40,7 @@ int read_Int_Array(JsonArrayConst arr , int* out , int max_count);
  * @param out The array to load into.
  * @param max_count The maximum number of values to read into out.
  */
-float read_Float_Array(JsonArrayConst arr , float* out , int max_count);
+int read_Float_Array(JsonArrayConst arr , float* out , int max_count);
 
 /**
  * @brief Reads the entire schedule into given arrays

@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include <AdafruitPWMServoDriver.h>
 
-Adafruit_PWMServoDriver pwm = AdafuitPWMServoDriver(SERVO_DRIVER_ADDR);
+AdafruitPWMServoDriver pwm = AdafuitPWMServoDriver(SERVO_DRIVER_ADDR);
 
 void servos_Init()
 {
