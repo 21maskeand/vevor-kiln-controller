@@ -1,6 +1,7 @@
 #include "buttons.h"
 #include "servos.h"
 #include "config.h"
+#include <Arduino.h>
 
 void buttons_Init()
 {
@@ -8,7 +9,7 @@ void buttons_Init()
 
 }
 
-void press_Button(int servo_id , int press_length)
+void press_Button(int servo_id , unsigned long press_length)
 {
   servo_Go_To_Angle(servo_id , SERVO_PRESS_ANGLE[servo_id]);
   delay(press_length);

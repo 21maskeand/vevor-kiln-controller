@@ -10,11 +10,11 @@
  * @brief These are the servo config variables.
  */
 constexpr int SERVO_DRIVER_ADDR = 0x40;
-constexpr int OSC_FREQ = 25000000;
+constexpr unit32_t OSC_FREQ = 25000000;
 constexpr int PWM_FREQ = 50;
 constexpr int SERVO_CHANNELS[4] = {0 , 1 , 2 , 3};
 constexpr float SERVO_UNPRESS_ANGLE[4] = {0 , 0 , 0 , 0};
-constexpr float SERVO_UNPRESS_ANGLE[4] = {30 , 30 , 30 , 30};
+constexpr float SERVO_PRESS_ANGLE[4] = {30 , 30 , 30 , 30};
 
 /**
  * @name Button Configs
@@ -24,10 +24,10 @@ constexpr int U_ID = 0;
 constexpr int P_ID = 1;
 constexpr int UP_ID = 2;
 constexpr int DOWN_ID = 3;
-constexpr int SHORT_PRESS = 100;
-constexpr int LONG_PRESS = 3000;
-constexpr int VERY_LONG_PRESS = 50000;
-constexpr int WAIT_TIME = 1000;
+constexpr unsigned long SHORT_PRESS = 100;
+constexpr unsigned long LONG_PRESS = 3000;
+constexpr unsigned long VERY_LONG_PRESS = 50000;
+constexpr unsigned long WAIT_TIME = 1000;
 
 /**
  * @name SD Card Configs
@@ -44,7 +44,7 @@ constexpr int SD_SCK_MHZ_VALUE = 4;
  * @name Schedule Configs
  * @brief Contains all configs related to the schedule. 
  */
-constexpr str SCHEDULE_PATH = "schedule.json";
+constexpr char SCHEDULE_PATH[] = "schedule.json";
 constexpr int MAX_TEMP = 1200;
 constexpr int MAX_STAGES = 15;
 

@@ -3,7 +3,8 @@
  * @brief This file contains the code for sd card 
  */
 
- #pragma once
+#pragma once
+#include <ArduinoJson.h>
 
 /**
  * @brief Initializies sd control.
@@ -50,7 +51,7 @@ float read_Float_Array(JsonArrayConst arr , float* out , int max_count);
  * @param times The times array to load times into.
  * @param max_count The maximum number of values to read into out.
  */
-int read_Schedule(JsonDocument& doc , int* temps , float* ramps , int* times , int max_count);
+int load_Schedule(JsonDocument& doc , int* temps , float* ramps , int* times , int max_count);
 
 
 
