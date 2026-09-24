@@ -12,14 +12,19 @@ void sd_Control_Init()
 
 }
 
-bool is_Card()
+bool is_Card_Still_In()
+{
+  return (digitalRead(SD_CD_PIN) == LOW);
+}
+
+bool is_Card_And_Mount_If()
 {
   if (digitalRead(SD_CD_PIN) == LOW)
   {
     delay(200);
     if (digitalRead(SD_CD_PIN) == LOW)
     {
-      sd.begin();
+      sd.begin(SD_CS_PIN , SD_SCK_MHZ(SD_SCK_MHZ_VALUE));
       return true;
     }
   }

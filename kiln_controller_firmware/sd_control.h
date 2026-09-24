@@ -12,9 +12,14 @@
 void sd_Control_Init();
 
 /**
- * @brief Checks if an SD card is inserted.
+ * @brief Checks if an SD card is still in after having been inserted.
  */
-bool is_Card();
+bool is_Card_Still_In();
+
+/**
+ * @brief Checks if an SD card has been inserted and mounts it if it has been.
+ */
+bool is_Card_And_Mount_If();
 
 /**
  * @brief Loads a JsonDocument into doc.

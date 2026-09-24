@@ -13,9 +13,12 @@
 constexpr int SERVO_DRIVER_ADDR = 0x40;
 constexpr uint32_t OSC_FREQ = 25000000;
 constexpr int PWM_FREQ = 50;
-constexpr int SERVO_CHANNELS[4] = {0 , 1 , 2 , 3};
-constexpr float SERVO_UNPRESS_ANGLE[4] = {0 , 0 , 0 , 0};
-constexpr float SERVO_PRESS_ANGLE[4] = {30 , 30 , 30 , 30};
+constexpr int NUM_SERVOS = 4;
+constexpr int SERVO_CHANNELS[NUM_SERVOS] = {0 , 1 , 2 , 3};
+constexpr float SERVO_UNPRESS_ANGLE[NUM_SERVOS] = {0 , 0 , 0 , 0};
+constexpr float SERVO_PRESS_ANGLE[NUM_SERVOS] = {30 , 30 , 30 , 30};
+constexpr int SERVO_BOTTOM_ENDPOINT = 500;
+constexpr int SERVO_TOP_ENDPOINT = 2500;
 
 /**
  * @name Button Configs
