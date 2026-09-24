@@ -13,7 +13,7 @@ void servos_Init()
   
   for (int i = 0; i < NUM_SERVOS; i++)
   {
-    servo_Go_To_Angle(i , SERVO_UNPRESS_ANGLE[i])
+    servo_Go_To_Angle(i , SERVO_UNPRESS_ANGLE[i]);
   }
 
 }

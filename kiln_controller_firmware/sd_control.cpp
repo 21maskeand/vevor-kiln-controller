@@ -24,8 +24,12 @@ bool is_Card_And_Mount_If()
     delay(200);
     if (digitalRead(SD_CD_PIN) == LOW)
     {
-      sd.begin(SD_CS_PIN , SD_SCK_MHZ(SD_SCK_MHZ_VALUE));
-      return true;
+      is_good = sd.begin(SD_CS_PIN , SD_SCK_MHZ(SD_SCK_MHZ_VALUE));
+      if (!is_good)
+      {
+        Serial.println("SD Card was detected but failed to mount.")
+      }
+      return is_good;
     }
   }
   return false;
@@ -34,11 +38,12 @@ bool is_Card_And_Mount_If()
 bool load_Doc(const char* path , JsonDocument& doc)
 {
   File f = sd.open(path , O_RDONLY);
-  if (!f) return false;
+  if (!f) {Serial.print("No file with path: "); Serial.print(path); Serial.println(" detected."); return false;}
   DeserializationError er = deserializeJson(doc , f);
   f.close();
   if (er)
   {
+    Serial.println("Deserialization Error.")
     return false;
   }
   else

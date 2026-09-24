@@ -87,7 +87,7 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
       if (is_Card_And_Mount_If())
       {
         sd_card_in = true;
-        goto exit_loops;
+        return;
       }
       if ((get_Time() - change_time) > interval)
       {
@@ -104,12 +104,12 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
       }
     } 
   }
-  exit_loops:
 }
 
 void do_Ramp(int temp , float ramp)
 {
   int temp_diff = temp - current_temp;
+  if (temp_diff == 0) return;
   bool direction = temp_diff > 0;
 
   int num_presses = 1;
@@ -120,14 +120,24 @@ void do_Ramp(int temp , float ramp)
   }
 
   if (!sd_card_in) do_Ramp_Section(ramp , num_presses , abs(temp_diff) / num_presses , direction);
-  if (!sd_card_in) do_Ramp_Section(ramp , abs(temp_diff) % num_presses , 1 , direction);
+  if (!sd_card_in && (abs(temp_diff) % num_presses)) do_Ramp_Section(ramp , abs(temp_diff) % num_presses , 1 , direction);
 
 }
 
 void do_Stage(int temp , float ramp , int hold_time)
 {
   do_Ramp(temp , ramp);
+  if (sd_card_in) return;
   current_temp = temp;
+  unsigned long start_time = millis();
+  while (millis() - start_time > min_To_Millis(hold_time))
+  {
+    if (is_Card_And_Mount_If())
+    {
+      sd_card_in = true;
+      return;
+    }
+  }
   delay(min_To_Millis(hold_time));
 
   current_temp = temp;
@@ -142,13 +152,14 @@ Controller_Status controller_Start()
     if (n_stages == -1) return ERROR;
     else
     {
+      float max_ramp = max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK)
       for (int i = 0; i < n_stages; i++)
       {
-        if (temps[i] > MAX_TEMP) return ERROR;
-        if (temps[i] < 0) return ERROR;
-        if (ramps[i] == 0) return ERROR;
-        if (ramps[i] > max_Ramp_For_Num_Presses(MAX_RAMP_PRESSES_CHECK)) return ERROR;
-        if (hold_times[i] < 0) return ERROR;
+        if (temps[i] > MAX_TEMP) {Serial.print("Temp "); Serial.print(i); Serial.print(" of ") Serial.print(temps[i]); Serial.println(" exceeds the maximum set."); return ERROR;}
+        if (temps[i] < 0) {Serial.print("Temp "); Serial.print(i); Serial.print(" of ") Serial.print(temps[i]); Serial.println(" cannot be less than zero."); return ERROR;}
+        if (ramps[i] <= 0) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of ") Serial.print(ramps[i]); Serial.println(" cannot be less than or equal to zero."); return ERROR;}
+        if (ramps[i] > max_ramp) {Serial.print("Ramp "); Serial.print(i); Serial.print(" of ") Serial.print(ramps[i]); Serial.print(" exceeds the maximum ramp speed for this configuration of "); Serial.println(max_ramp); return ERROR;}
+        if (hold_times[i] < 0) {Serial.print("Hold time "); Serial.print(i); Serial.print(" of ") Serial.print(hold_times[i]); Serial.println(" Cannot be less than zero."); return ERROR;}
         
       }
       return READY;
@@ -166,6 +177,8 @@ Controller_Status controller_Go()
   }
   if (sd_card_in)
   {
+    Serial.println("SD card cannot be inserted while the schedule is running.")
+    go_To_Zero();
     return ERROR;
   }
   else
@@ -178,6 +191,7 @@ Controller_Status controller_Go()
 
 void wait_Till_Card_Gone()
 {
+  Serial.println("Remove SD Card.")
   while (true)
   {
     if (!is_Card_Still_In()) 
@@ -193,7 +207,6 @@ void loop()
   led_Update();
 
   sd_card_in = is_Card_And_Mount_If();
-  mount_Card();
   if (sd_card_in)
   {
     
