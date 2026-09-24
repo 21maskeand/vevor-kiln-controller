@@ -44,5 +44,20 @@ constexpr int SD_SCK_MHZ_VALUE = 4;
  * @name Schedule Configs
  * @brief Contains all configs related to the schedule. 
  */
-constexpr str SCHEDULE_NAME = "schedule.json";
+constexpr str SCHEDULE_PATH = "schedule.json";
 constexpr int MAX_TEMP = 1200;
+constexpr int MAX_STAGES = 15;
+
+/**
+ * @name Status Configs
+ * @brief These are the configs for status LEDs
+ */
+constexpr int READY_LED_PIN = 3;
+constexpr int ERROR_LED_PIN = 4;
+constexpr int IN_PROGRESS_LED_PIN = 5;
+
+
+
+
+
+
