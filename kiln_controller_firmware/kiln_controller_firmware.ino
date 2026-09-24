@@ -5,8 +5,8 @@
 
 enum Controller_Status {READY , ERROR , IN_PROGRESS};
 
-bool sd_card_in = false;
-Controller_Status status = READY;
+Card_Status card_status = OUT;
+Controller_Status controller_status = READY;
 int current_temp;
 
 int temps[MAX_STAGES];
@@ -17,7 +17,7 @@ JsonDocument doc;
 
 void setup() 
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   sd_Control_Init();
   buttons_Init();
   led_Init();
@@ -33,19 +33,19 @@ void led_Init()
 
 void led_Update()
 {
-  if (status == READY)
+  if (controller_status == READY)
   {
     digitalWrite(READY_LED_PIN , HIGH);
     digitalWrite(ERROR_LED_PIN , LOW);
     digitalWrite(IN_PROGRESS_LED_PIN , LOW);
   }
-  else if (status == ERROR) 
+  else if (controller_status == ERROR) 
   {
     digitalWrite(READY_LED_PIN , LOW);
     digitalWrite(ERROR_LED_PIN , HIGH);
     digitalWrite(IN_PROGRESS_LED_PIN , LOW);
   }
-  else if (status == IN_PROGRESS) 
+  else if (controller_status == IN_PROGRESS) 
   {
     digitalWrite(READY_LED_PIN , LOW);
     digitalWrite(ERROR_LED_PIN , LOW);
@@ -85,11 +85,12 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
     float interval = num_presses / ramp;
     while (true)
     {
-      if (is_Card_And_Mount_If())
+      card_status = is_Card_And_Mount_If();
+      if (card_status != OUT)
       {
-        sd_card_in = true;
         return;
       }
+
       if ((get_Time() - change_time) > interval)
       {
         change_time = get_Time();
@@ -120,22 +121,22 @@ void do_Ramp(int temp , float ramp)
     else num_presses++;
   }
 
-  if (!sd_card_in) do_Ramp_Section(ramp , num_presses , abs(temp_diff) / num_presses , direction);
-  if (!sd_card_in && (abs(temp_diff) % num_presses)) do_Ramp_Section(ramp , abs(temp_diff) % num_presses , 1 , direction);
+  if (card_status == OUT) do_Ramp_Section(ramp , num_presses , abs(temp_diff) / num_presses , direction);
+  if ((card_status == OUT) && (abs(temp_diff) % num_presses)) do_Ramp_Section(ramp , abs(temp_diff) % num_presses , 1 , direction);
 
 }
 
 void do_Stage(int temp , float ramp , int hold_time)
 {
   do_Ramp(temp , ramp);
-  if (sd_card_in) return;
+  if (card_status != OUT) return;
   current_temp = temp;
   unsigned long start_time = millis();
   while (millis() - start_time < min_To_Millis(hold_time))
   {
-    if (is_Card_And_Mount_If())
+    card_status = is_Card_And_Mount_If();
+    if (card_status != OUT)
     {
-      sd_card_in = true;
       return;
     }
   }
@@ -173,9 +174,9 @@ Controller_Status controller_Go()
 {
   for (int i = 0; i < n_stages; i++)
   {
-    if (!sd_card_in) do_Stage(temps[i] , ramps[i] , hold_times[i]);
+    if (card_status == OUT) do_Stage(temps[i] , ramps[i] , hold_times[i]);
   }
-  if (sd_card_in)
+  if (card_status != OUT)
   {
     Serial.println(F("SD card cannot be inserted while the schedule is running."));
     go_To_Zero();
@@ -194,11 +195,8 @@ void wait_Till_Card_Gone()
   Serial.println(F("Remove SD Card."));
   while (true)
   {
-    if (!is_Card_Still_In()) 
-    {
-      sd_card_in = false;
-      break;
-    }
+    card_status = is_Card_And_Mount_If();
+    if (card_status == OUT) break;
   }
 }
 
@@ -206,16 +204,16 @@ void loop()
 {
   led_Update();
 
-  sd_card_in = is_Card_And_Mount_If();
-  if (sd_card_in)
+  card_status = is_Card_And_Mount_If();
+  if (card_status == GOOD)
   {
     
-    status = IN_PROGRESS;
+    controller_status = IN_PROGRESS;
     led_Update();
 
-    status = controller_Start();
+    controller_status = controller_Start();
     led_Update();
-    if (status == ERROR)
+    if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
       return;
@@ -223,19 +221,19 @@ void loop()
 
     wait_Till_Card_Gone();
 
-    status = IN_PROGRESS;
+    controller_status = IN_PROGRESS;
     led_Update();
     go_To_Zero();
 
-    status = controller_Go();
+    controller_status = controller_Go();
     led_Update();
-    if (status == ERROR)
+    if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
       return;
     }
-
   }
+  else if (card_status == MOUNT_ERROR) wait_Till_Card_Gone();
 }
 
 

@@ -12,12 +12,19 @@ void sd_Control_Init()
 
 }
 
-bool is_Card_Still_In()
+Card_Status is_Card_Still_In()
 {
-  return (digitalRead(SD_CD_PIN) == LOW);
+  if (digitalRead(SD_CD_PIN) == LOW)
+  {
+    return GOOD;
+  }
+  else
+  {
+    return OUT;
+  }
 }
 
-bool is_Card_And_Mount_If()
+Card_Status is_Card_And_Mount_If()
 {
   if (digitalRead(SD_CD_PIN) == LOW)
   {
@@ -28,11 +35,15 @@ bool is_Card_And_Mount_If()
       if (!is_good)
       {
         Serial.println(F("SD Card was detected but failed to mount."));
+        return MOUNT_ERROR;
       }
-      return is_good;
+      else
+      {
+        return GOOD;
+      }
     }
   }
-  return false;
+  return OUT;
 }
 
 bool load_Doc(const char* path , JsonDocument& doc)
