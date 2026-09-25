@@ -4,7 +4,13 @@
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
+#if SD_FS_TYPE == 0
 SdFat sd;
+#elif SD_FS_TYPE == 1
+SdExFat sd;
+#else 
+#error "SD_FS_TYPE must be 0 or 1. "
+#endif
 
 void sd_Control_Init()
 {
@@ -35,6 +41,7 @@ Card_Status is_Card_And_Mount_If()
       if (!is_good)
       {
         Serial.println(F("SD Card was detected but failed to mount."));
+        sd.initErrorPrint(&Serial);
         return MOUNT_ERROR;
       }
       else
