@@ -23,6 +23,8 @@ void setup()
   buttons_Init();
   led_Init();
 
+  press_Button(P_ID , SHORT_PRESS);
+
 }
 
 void led_Init()
@@ -215,7 +217,7 @@ void wait_Till_Card_Gone()
   card_status = OUT;
 }
 
-void loop() 
+void floop() 
 {
   indicator_Update();
 
@@ -262,6 +264,10 @@ void loop()
   }
 }
 
+void loop()
+{
+
+}
 
 
 
