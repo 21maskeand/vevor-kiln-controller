@@ -38,7 +38,7 @@ constexpr unsigned long WAIT_TIME = 500;
  * @brief These are the SD Card configs.
  */
 /// Sd file system type, use 0 for cards less than 64 gb or formatted SdFat32 or SdFat16, use 1 for bigger cards.
-constexpr int SD_FS_TYPE = 1;
+#define SD_FS_TYPE 1
 /// The SD chip select pin.
 constexpr int SD_CS_PIN = 10;
 /// The SD card chip detected pin, detects when an sd card is inserted.

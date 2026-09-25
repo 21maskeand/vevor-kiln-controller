@@ -4,6 +4,9 @@
 #include <ArduinoJson.h>
 #include <Arduino.h>
 
+#ifndef SD_FS_TYPE
+#error "SD_FS_TYPE must be #defined in config.h"
+#endif
 #if SD_FS_TYPE == 0
 SdFat sd;
 #elif SD_FS_TYPE == 1
