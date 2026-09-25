@@ -8,6 +8,7 @@ enum Controller_Status {READY , ERROR , IN_PROGRESS};
 Card_Status card_status = OUT;
 Controller_Status controller_status = READY;
 int current_temp;
+bool is_in_heating_mode = false;
 
 int temps[MAX_STAGES];
 float ramps[MAX_STAGES];
@@ -55,9 +56,17 @@ void indicator_Update()
 
 void go_To_Zero()
 {
+  if (is_in_heating_mode)
+  {
+    press_Button(P_ID , SHORT_PRESS);
+    is_in_heating_mode = false;
+  }
   press_Button(U_ID , LONG_PRESS);
+  press_Button(U_ID , SHORT_PRESS);
   press_Button(DOWN_ID , VERY_LONG_PRESS);
   press_Button(P_ID , LONG_PRESS);
+  press_Button(P_ID , SHORT_PRESS);
+  is_in_heating_mode = false;
   current_temp = 0;
 }
 
@@ -94,6 +103,12 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
       if ((get_Time() - change_time) > interval)
       {
         change_time = get_Time();
+        if (is_in_heating_mode)
+        {
+          press_Button(P_ID , SHORT_PRESS);
+          is_in_heating_mode = false;
+        }
+        press_Button(U_ID , SHORT_PRESS);
         press_Button(U_ID , LONG_PRESS);
         for (int press = 0; press < num_presses; press++)
         {
@@ -101,6 +116,7 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
           else press_Button(DOWN_ID , SHORT_PRESS);
         }
         press_Button(P_ID , LONG_PRESS);
+        is_in_heating_mode = true;
 
         break;
       }
@@ -179,6 +195,8 @@ Controller_Status controller_Go()
   if (card_status != OUT)
   {
     Serial.println(F("SD card cannot be inserted while the schedule is running."));
+    controller_status = ERROR;
+    indicator_Update();
     go_To_Zero();
     return ERROR;
   }
@@ -213,6 +231,8 @@ void loop()
     if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
+      controller_status = READY;
+      indicator_Update();
       return;
     }
 
@@ -227,6 +247,8 @@ void loop()
     if (controller_status == ERROR)
     {
       wait_Till_Card_Gone();
+      controller_status = READY;
+      indicator_Update();
       return;
     }
   }
