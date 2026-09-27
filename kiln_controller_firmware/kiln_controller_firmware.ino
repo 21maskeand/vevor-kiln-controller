@@ -23,7 +23,9 @@ void setup()
   buttons_Init();
   led_Init();
 
-  press_Button(P_ID , SHORT_PRESS);
+  press_Button(U_ID , LONG_PRESS);
+  // press_Button(U_ID , LONG_PRESS);
+  // press_Button(U_ID , LONG_PRESS);
 
 }
 
@@ -67,6 +69,7 @@ void go_To_Zero()
   press_Button(U_ID , SHORT_PRESS);
   press_Button(DOWN_ID , VERY_LONG_PRESS);
   press_Button(P_ID , LONG_PRESS);
+  delay(100);
   press_Button(P_ID , SHORT_PRESS);
   is_in_heating_mode = false;
   current_temp = 0;
@@ -110,8 +113,8 @@ void do_Ramp_Section(float ramp , int num_presses , int increments , bool direct
           press_Button(P_ID , SHORT_PRESS);
           is_in_heating_mode = false;
         }
-        press_Button(U_ID , SHORT_PRESS);
         press_Button(U_ID , LONG_PRESS);
+        press_Button(U_ID , SHORT_PRESS);
         for (int press = 0; press < num_presses; press++)
         {
           if (direction) press_Button(UP_ID , SHORT_PRESS);
@@ -264,12 +267,8 @@ void floop()
   }
 }
 
-void loop()
-{
 
-}
-
-
+void loop() {}
 
 
 

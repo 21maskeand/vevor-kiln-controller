@@ -16,7 +16,7 @@ constexpr int PWM_FREQ = 50;
 constexpr int NUM_SERVOS = 4;
 constexpr int SERVO_CHANNELS[NUM_SERVOS] = {0 , 1 , 2 , 3};
 constexpr float SERVO_UNPRESS_ANGLE[NUM_SERVOS] = {0 , 180 , 180 , 0};
-constexpr float SERVO_PRESS_ANGLE[NUM_SERVOS] = {25 , 140 , 130 , 45};
+constexpr float SERVO_PRESS_ANGLE[NUM_SERVOS] = {30 , 145 , 130 , 45};
 constexpr int SERVO_BOTTOM_ENDPOINT = 500;
 constexpr int SERVO_TOP_ENDPOINT = 2500;
 
@@ -28,8 +28,8 @@ constexpr int U_ID = 0;
 constexpr int P_ID = 1;
 constexpr int UP_ID = 2;
 constexpr int DOWN_ID = 3;
-constexpr unsigned long SHORT_PRESS = 200;
-constexpr unsigned long LONG_PRESS = 4000;
+constexpr unsigned long SHORT_PRESS = 300;
+constexpr unsigned long LONG_PRESS = 3000;
 constexpr unsigned long VERY_LONG_PRESS = 25000;
 constexpr unsigned long WAIT_TIME = 500;
 
